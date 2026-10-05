@@ -17,6 +17,11 @@ class SaleOrder(models.Model):
 
         return res
 
+    def _has_products_with_period_attributes(self):
+        return self.mapped("order_line.product_template_id").filtered(
+            lambda x: x._has_period_attributes()
+        )
+
     def _get_allowed_renting_periods(self):
         if not self.order_line:
             return []
@@ -41,10 +46,13 @@ class SaleOrder(models.Model):
             0
         ]
         is_adding_product_with_specific_renting_period = bool(
-            product.renting_min_start_date or product.renting_max_end_date
+            product.renting_min_start_date
+            or product.renting_max_end_date
+            or product._has_period_attributes()
         )
         existing_products_with_specific_renting_period = (
             self._get_products_with_specific_renting_period()
+            | self._has_products_with_period_attributes()
         )
         other_products = all_products - existing_products_with_specific_renting_period
 

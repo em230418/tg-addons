@@ -27,6 +27,10 @@ In that case default renting start and ends dates are taken from product-specifi
 
 Note: in one cart you cannot mix products with default renting dates and product with specific renting dates
 
+Product specific renting dates
+------------------------------
+
+
 Usage
 -----
 

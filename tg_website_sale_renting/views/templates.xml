@@ -12,6 +12,16 @@
                 name="t-att-data-max-end-date"
             >product._get_renting_max_end_date()</attribute>
         </xpath>
+        <xpath expr="//input[@name='renting_start_date']" position="attributes">
+            <attribute
+                name="t-att-disabled"
+            >(wso.has_rented_products and wso.order_line.filtered('is_rental').product_id != product) or product._has_period_attributes()</attribute>
+        </xpath>
+        <xpath expr="//input[@name='renting_end_date']" position="attributes">
+            <attribute
+                name="t-att-disabled"
+            >(wso.has_rented_products and wso.order_line.filtered('is_rental').product_id != product) or product._has_period_attributes()</attribute>
+        </xpath>
     </template>
 
     <template id="cart" inherit_id="website_sale_renting.cart">
@@ -24,7 +34,7 @@
         <xpath expr="//div[@id='rentingDates']/../.." position="attributes">
             <attribute
                 name="t-if"
-            >website_sale_order.has_rented_products and len(allowed_renting_periods) == 1</attribute>
+            >website_sale_order.has_rented_products and len(allowed_renting_periods) == 1 and not website_sale_order._has_products_with_period_attributes()</attribute>
         </xpath>
         <xpath expr="//div[@id='rentingDates']" position="attributes">
             <attribute
