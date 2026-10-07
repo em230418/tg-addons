@@ -4,10 +4,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
 
-from odoo.addons.website_sale.models.product_template import (
-    ProductTemplate as ProductTemplateFromWebsiteSale,
-)
-
 PANAMA_TZ = timezone("America/Panama")
 
 
@@ -100,53 +96,3 @@ class ProductTemplate(models.Model):
     def _has_period_attributes(self):
         self.ensure_one()
         return any(self.mapped("attribute_line_ids.attribute_id.is_period"))
-
-    def _get_combination_info(
-        self,
-        combination=False,
-        product_id=False,
-        add_qty=1.0,
-        parent_combination=False,
-        only_template=False,
-    ):
-        self.ensure_one()
-
-        combination = combination or self.env["product.template.attribute.value"]
-        parent_combination = (
-            parent_combination or self.env["product.template.attribute.value"]
-        )
-
-        if not product_id and not combination and not only_template:
-            combination = self._get_first_possible_combination(parent_combination)
-
-        res = super()._get_combination_info(
-            combination, product_id, add_qty, parent_combination, only_template
-        )
-
-        period_ptav = combination.filtered("is_period")
-        if period_ptav:
-            res.update(
-                start_date=make_panana_dt(period_ptav.start_date),
-                end_date=make_panana_dt(period_ptav.end_date),
-            )
-        return res
-
-    def _get_additionnal_combination_info(
-        self, product_or_template, quantity, date, website
-    ):
-        res = super()._get_additionnal_combination_info(
-            product_or_template, quantity, date, website
-        )
-
-        if product_or_template._has_period_attributes():
-            alt_res = ProductTemplateFromWebsiteSale._get_additionnal_combination_info(
-                self, product_or_template, quantity, date, website
-            )
-            current_rental_price = alt_res["base_unit_price"] + alt_res["price_extra"]
-            res.update(**alt_res)
-            res.update(
-                current_rental_price=current_rental_price,
-                current_rental_price_per_unit=current_rental_price,
-            )
-
-        return res

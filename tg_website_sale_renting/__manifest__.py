@@ -14,7 +14,6 @@
         ],
     },
     "data": [
-        "views/product_attribute_views.xml",
         "views/product_views.xml",
         "views/templates.xml",
         "views/res_config_settings_views.xml",
