@@ -10,7 +10,7 @@ class ProductTemplateAttributeValue(models.Model):
     start_date = fields.Date()
     end_date = fields.Date()
 
-    @api.constrains("is_period", "start_date", "end_date")
+    @api.constrains("start_date", "end_date")
     def _check_period(self):
         for ptav in self.filtered("is_period"):
             if not ptav.start_date:

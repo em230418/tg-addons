@@ -6,7 +6,7 @@
     "website": "https://github.com/it-projects-llc/tg-addons",
     "license": "Other proprietary",  # pylint: disable=license-allowed
     "depends": [
-        "website_sale_renting",
+        "tg_website_sale_renting",
     ],
     "data": [
         "views/product_attribute_views.xml",

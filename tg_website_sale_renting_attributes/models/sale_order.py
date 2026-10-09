@@ -1,5 +1,7 @@
-from odoo import _, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
+
+from odoo.addons.tg_website_sale_renting.models.product_template import make_panana_dt
 
 
 class SaleOrder(models.Model):
@@ -71,5 +73,18 @@ class SaleOrder(models.Model):
                 expected_end_date = end_date
                 line_with_expected = line
 
-            record.rental_start_date = expected_start_date
-            record.rental_end_date = expected_end_date
+            record.rental_start_date = make_panana_dt(expected_start_date)
+            record.rental_return_date = make_panana_dt(expected_end_date)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        records._enforce_rental_dates()
+        return records
+
+    def write(self, vals):
+        should_enforce = "order_line" in vals
+        res = super().write(vals)
+        if should_enforce:
+            self._enforce_rental_dates()
+        return res

@@ -2,9 +2,7 @@
  eCommerce Rental Period Attributes
 ====================================
 
-_
-
-__
+Introduces "Can be rented via attributes" option in product.
 
 Credits
 =======

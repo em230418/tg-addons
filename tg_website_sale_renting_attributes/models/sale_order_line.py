@@ -5,7 +5,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     is_product_rentable = fields.Boolean(
-        related=None, depends=None, compute="_compute_is_product_rentable", store=True
+        related=None, depends=[], compute="_compute_is_product_rentable", store=True
     )
 
     @api.depends("product_id")
